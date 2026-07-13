@@ -398,7 +398,5 @@ def gateway_timeout(e):
 # Ejecución de la Aplicación                                  #
 #-------------------------------------------------------------#
 if __name__ == "__main__":
-    # host="0.0.0.0" permite conexiones externas (Internet).
-    # port=443 y ssl_context="adhoc" habilitan HTTPS temporalmente para coincidir con la topología.
     app.run(host="0.0.0.0", port=443, ssl_context="adhoc", debug=True)
 ###############################################################
