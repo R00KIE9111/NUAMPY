@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOAD: calificaciones por factor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="encabezado_diseño">
+
+        <div class="header_centro">
+            <a href="{{ url_for('dashboard') }}" class="logo_link">
+                <img class="logo" src="{{ url_for('static', filename='images/LogoNuamColor.png') }}" alt="Logo_Nuam">
+            </a>        
+            <nav class="botones_nav">
+
+                <div class="dropdown">
+                    <button class="dropdown-btn">Perfil ⯆</button>
+
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('configuracion_perfil') }}" class="nav-link nav_perfil">Perfil</a>
+
+                        {% if session.get('rol') == 'ADMIN' %}
+                        <a href="{{ url_for('administracion') }}">Admin</a>
+                        {% endif %}
+
+                        <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+                    </div>
+                </div>
+
+            </nav>
+        </div>
+    </header>
+    <h1>Carga de CSV por Factor</h1>
+    <form method="POST" action="{{ url_for('cargar_factores') }}" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="csv_file">Subir archivo CSV (Factores):</label>
+        <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+        <button type="submit">Cargar</button>
+    </form>
+</body>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="encabezado_diseño">
+
+        <div class="header_centro">
+            <a href="{{ url_for('dashboard') }}" class="logo_link">
+                <img class="logo" src="{{ url_for('static', filename='images/LogoNuamColor.png') }}" alt="Logo_Nuam">
+            </a>        
+            <nav class="botones_nav">
+
+                <div class="dropdown">
+                    <button class="dropdown-btn">Perfil ⯆</button>
+
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('configuracion_perfil') }}" class="nav-link nav_perfil">Perfil</a>
+
+                        {% if session.get('rol') == 'ADMIN' %}
+                        <a href="{{ url_for('administracion') }}">Admin</a>
+                        {% endif %}
+
+                        <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+                    </div>
+                </div>
+
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-container">
+        <h1>Panel de Administración</h1>
+
+        <div class="admin-actions">
+            <a href="{{ url_for('crear_user') }}" class="footer-btn">Crear Usuario</a>
+        </div>
+
+        <h2>Usuarios existentes</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in usuarios %}
+                    <tr>
+                        <td>{{ u.nombre }}</td>
+                        <td>{{ u.correo }}</td>
+                        <td>{{ u.rol }}</td>
+                        <td class="acciones-td">
+                            <a href="{{ url_for('modificar_usuario', nombre=u.nombre) }}" class="table-btn modify">Modificar</a>
+                            <form method="POST" action="{{ url_for('eliminar_user', nombre=u.nombre) }}" class="delete-form">
+                                <button type="submit" class="table-btn delete">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

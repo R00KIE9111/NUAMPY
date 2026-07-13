@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASHBOARD</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="encabezado_diseño">
+
+        <div class="header_centro">
+            <a href="{{ url_for('dashboard') }}" class="logo_link">
+                <img class="logo" src="{{ url_for('static', filename='images/LogoNuamColor.png') }}" alt="Logo_Nuam">
+            </a>
+            <!-- FORMULARIO DE FILTRO -->
+            <div class="contenedor_filtros"></div>
+            <button type="button" class="btn_filtros" onclick="abrirModal()">Filtros</button>
+                <div id="modalFiltros" class="modal">
+    <div class="modal-contenido">
+    <span class="cerrar" onclick="cerrarModal()">x</span>
+    <h2>Aplicar filtros</h2>
+    <form class="filtro-formulario" method="POST" action="{{ url_for('filtro_calificaciones') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <label>Mercado:</label>
+        <select name="mercado">
+            <option value="">Todos</option>
+            {% for mercado in mercados %}
+            <option value="{{ mercado }}">{{ mercado }}</option>
+            {% endfor %}
+        </select>
+        
+        <label>Instrumento:</label>
+        <input type="text" name="instrumento">
+        
+        <label>Año:</label>
+        <input type="number" name="anio" min="2000" max="2030">
+
+        <label>Corredor:</label>
+        <input type="text" name="corredor">
+        
+        <label>Tipo de Sociedad:</label>
+        <input type="text" name="tipo_sociedad">
+        
+        <button type="submit" class="btn_enviar">Aplicar</button>
+    </form>
+  </div>
+</div>
+            </div>        
+            <nav class="botones_nav">
+
+                <div class="dropdown">
+                    <button class="dropdown-btn">Perfil ⯆</button>
+
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('configuracion_perfil') }}" class="nav-link nav_perfil">Perfil</a>
+
+                        {% if session.get('rol') == 'ADMIN' %}
+                        <a href="{{ url_for('administracion') }}">Admin</a>
+                        {% endif %}
+
+                        <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+                    </div>
+                </div>
+
+            </nav>
+        </div>
+    </header>
+
+
+
+<!-- TABLA   -->
+    <div class="tabla_contenedor">
+        <table class="tabla_datos">
+            <tr>
+                <th>Mercado</th>
+                <th>Instrumento</th>
+                <th>Año</th>
+                <th>Fecha de Pago</th>
+                <th>Secuencia Evento</th>
+                <th>Dividendo</th>
+                <th>Valor Histórico</th>
+                <th>Descripción</th>
+                <th>ISFUT</th>
+                <th>Factor Actualización</th>
+                <th>Tipo Sociedad</th>
+                <th>Corredor</th>
+                {% for i in range(8, 38) %}
+                    <th>Factor {{ i }}</th>
+                {% endfor %}
+            </tr>
+            <tbody>
+                {% for dato in calificaciones %}
+                <tr>
+                    <td>{{ dato.mercado }}</td>
+                    <td>{{ dato.instrumento }}</td>
+                    <td>{{ dato.anio }}</td>
+                    <td>{{ dato.fecha_pago }}</td>
+                    <td>{{ dato.secuencia_evento }}</td>
+                    <td>{{ dato.dividendo }}</td>
+                    <td>{{ dato.valor_historico }}</td>
+                    <td>{{ dato.descripcion }}</td>
+                    <td>{{ dato.isfut }}</td>
+                    <td>{{ dato.factor_actualizacion }}</td>
+                    <td>{{ dato.tipo_sociedad }}</td>
+                    <td>{{ dato.corredor }}</td>
+                    {% for i in range(8, 38) %}
+                        <td>{{ dato.factores.get('factor_'+i|string, '') }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <div class="footer_botones">
+            <a href="{{ url_for('crear_calificacion') }}" class="footer-btn">INGRESAR</a>
+            <a href="{{ url_for('cargar_factores') }}" class="footer-btn">CARGA X FACTOR</a>
+            <a href="{{ url_for('cargar_montos') }}" class="footer-btn">CARGA X MONTO</a>
+        </div>
+    </footer>
+</body>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</html>

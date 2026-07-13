@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="encabezado_diseño">
+        <div class="header_centro">
+            <a href="{{ url_for('dashboard') }}" class="logo_link">
+                <img class="logo" src="{{ url_for('static', filename='images/LogoNuamColor.png') }}" alt="Logo_Nuam">
+            </a>
+            <nav class="botones_nav">
+                <div class="dropdown">
+                    <button class="dropdown-btn">Perfil ⯆</button>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('configuracion_perfil') }}" class="nav-link nav_perfil">Perfil</a>
+                        {% if session.get('rol') == 'ADMIN' %}
+                        <a href="{{ url_for('administracion') }}">Admin</a>
+                        {% endif %}
+                        <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="tabla_contenedor">
+        <h1 style="color:#ff5500;">Eliminar Usuario</h1>
+
+        <form method="POST" action="{{ url_for('eliminar_user') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <label for="nombre" style="color:#d0d0d0;">Seleccione usuario:</label>
+            <select name="nombre" id="nombre" required>
+                {% for user in usuarios %}
+                    <option value="{{ user['nombre'] }}">{{ user['nombre'] }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="button" class="btn_enviar" id="openModal">Eliminar</button>
+
+            <!-- Modal -->
+            <div id="confirmModal" class="modal">
+                <div class="modal-contenido">
+                    <span class="cerrar" id="closeModal">&times;</span>
+                    <h2 style="color:#282828;">¿Está seguro de eliminar este usuario?</h2>
+                    <button type="submit" class="btn_enviar" style="background-color:#d9534f; color:#fff;">Sí, eliminar</button>
+                    <button type="button" class="btn_enviar" id="cancelBtn">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <div class="footer_botones">
+            <a href="{{ url_for('dashboard') }}" class="footer-btn">Volver al Dashboard</a>
+        </div>
+    </footer>
+</body>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</html>

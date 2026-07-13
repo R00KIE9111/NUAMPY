@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresar Calificación</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="encabezado_diseño">
+
+        <div class="header_centro">
+            <a href="{{ url_for('dashboard') }}" class="logo_link">
+                <img class="logo" src="{{ url_for('static', filename='images/LogoNuamColor.png') }}" alt="Logo_Nuam">
+            </a>        
+            <nav class="botones_nav">
+
+                <div class="dropdown">
+                    <button class="dropdown-btn">Perfil ⯆</button>
+
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('configuracion_perfil') }}" class="nav-link nav_perfil">Perfil</a>
+
+                        {% if session.get('rol') == 'ADMIN' %}
+                        <a href="{{ url_for('administracion') }}">Admin</a>
+                        {% endif %}
+
+                        <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+                    </div>
+                </div>
+
+            </nav>
+        </div>
+    </header>
+    <main class="form_contenedor">
+        <h1>Ingresar Calificación</h1>
+
+        <form action="{{ url_for('crear_calificacion') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="form_grupo">
+                <label for="Mercado">Mercado</label>
+                <select id="Mercado" name="Mercado">
+                    <option value="chile">Chile</option>
+                    <option value="peru">Perú</option>
+                    <option value="colombia">Colombia</option>
+                </select>
+            </div>
+
+            <div class="form_grupo">
+                <label for="Instrumento">Instrumento</label>
+                <input type="text" id="Instrumento" name="Instrumento">
+            </div>
+
+            <div class="form_grupo">
+                <label for="anio">Año</label>
+                <input type="number" id="anio" name="anio" min="2000" max="2030">
+            </div>
+
+            <div class="form_grupo">
+                <label for="Fecha_de_pago">Fecha de Pago</label>
+                <input type="date" id="Fecha_de_pago" name="Fecha_de_pago">
+            </div>
+
+            <div class="form_grupo">
+                <label for="secuencia_evento">Secuencia Evento</label>
+                <input type="text" id="secuencia_evento" name="secuencia_evento">
+            </div>
+
+            <div class="form_grupo">
+                <label for="Dividendo">Dividendo</label>
+                <input type="number" id="Dividendo" name="Dividendo" step="any">
+            </div>
+
+            <div class="form_grupo">
+                <label for="valor_historico">Valor Histórico</label>
+                <input type="number" id="valor_historico" name="valor_historico" step="any">
+            </div>
+
+            <div class="form_grupo">
+                <label for="Descripcion">Descripción</label>
+                <input type="text" id="Descripcion" name="Descripcion">
+            </div>
+
+            <div class="form_grupo">
+                <label for="ISFUT">ISFUT</label>
+                <input type="hidden" name="ISFUT" value="no">
+                <input type="checkbox" id="ISFUT" name="ISFUT" value="si">
+            </div>
+
+            <div class="form_grupo">
+                <label for="factor_actualizacion">Factor Actualización</label>
+                <input type="number" id="factor_actualizacion" name="factor_actualizacion" step="any">
+            </div>
+
+            <div class="form_grupo">
+                <label for="tipo_sociedad">Tipo Sociedad</label>
+                <input type="text" id="tipo_sociedad" name="tipo_sociedad">
+            </div>
+
+            <div class="form_grupo">
+                <label for="Corredor">Corredor</label>
+                <input type="text" id="Corredor" name="Corredor" required>
+            </div>
+
+            <div class="form_grupo">
+                <label for="modo">Ingresar factores o montos:</label>
+                <select id="modo" name="modo" onchange="mostrarModo()">
+                    <option value="">Seleccione...</option>
+                    <option value="factores">Ingresar por Factores</option>
+                    <option value="montos">Ingresar por Montos</option>
+                </select>
+            </div>
+
+            <!-- FACTORES -->
+            <div id="crear_factores" class="box_estilo" style="display:none;">
+                <h3>Factores</h3>
+                <div class="grilla_factores">
+                    {% for i in range(8, 38) %}
+                    <div class="form_grupo">
+                        <label for="factor{{ i }}">Factor {{ i }}</label>
+                        <input type="number" id="factor_{{ i }}" name="factor_{{ i }}" step="any">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- MONTOS -->
+            <div id="crear_montos" class="box_estilo" style="display:none;">
+                <h3>Montos</h3>
+                <div class="grilla_factores">
+                    {% for i in range(8, 38) %}
+                    <div class="form_grupo">
+                        <label for="monto{{ i }}">Monto {{ i }}</label>
+                        <input type="number" id="monto_{{ i }}" name="monto_{{ i }}" step="any">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form_acciones">
+                <input type="submit" value="Enviar" class="boton_calificaciones">
+            </div>
+        </form>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Modificar Usuario</h1>
+    <form method="POST" action="{{ url_for('modificar_usuario', nombre=usuario.nombre) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <label>Nombre:</label>
+        <input type="text" name="nombre" value="{{ usuario.nombre }}" readonly>
+
+        <label>Correo:</label>
+        <input type="email" name="correo" value="{{ usuario.correo }}">
+
+        <label>Rol:</label>
+        <select name="rol">
+            <option value="ADMIN" {% if usuario.rol == 'ADMIN' %}selected{% endif %}>ADMIN</option>
+            <option value="INVITADO" {% if usuario.rol == 'INVITADO' %}selected{% endif %}>INVITADO</option>
+            <option value="CORREDOR" {% if usuario.rol == 'CORREDOR' %}selected{% endif %}>CORREDOR</option>
+        </select>
+
+        <button type="submit">Actualizar</button>
+    </form>
+</body>
+</html>
