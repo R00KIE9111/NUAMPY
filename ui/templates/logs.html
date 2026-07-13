@@ -3,14 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>READ: logs</title>
+    <title>Historial de Auditoría (Logs)</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <form action="">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    
-    </form>
+    <header class="encabezado_diseño">
+        <div class="header_centro">
+            <a href="{{ url_for('dashboard') }}" class="logo_link">
+                <img class="logo" src="{{ url_for('static', filename='images/LogoNuamColor.png') }}" alt="Logo_Nuam">
+            </a>
+            <h2 style="color:var(--accent-primary); margin:0 auto; font-weight:600;">Registro Inmutable de Auditoría</h2>
+            <nav class="botones_nav">
+                <a href="{{ url_for('dashboard') }}" class="btn_enviar">Volver al Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="tabla_contenedor">
+        <table class="tabla_datos">
+            <thead>
+                <tr>
+                    <th>Fecha y Hora (UTC)</th>
+                    <th>Acción Realizada</th>
+                    <th>Usuario Autor</th>
+                    <th>Detalles Técnicos (JSON)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs|sort(attribute='timestamp', reverse=True) %}
+                <tr>
+                    <td>{{ log.timestamp }}</td>
+                    <td><strong style="color:var(--accent-primary);">{{ log.accion }}</strong></td>
+                    <td>{{ log.usuario }}</td>
+                    <td><pre style="margin:0; font-size:0.8rem; color:#A0A0B0; white-space: pre-wrap;">{{ log.detalle | tojson(indent=2) }}</pre></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" style="text-align:center;">No hay registros de auditoría disponibles en Cosmos DB.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </html>

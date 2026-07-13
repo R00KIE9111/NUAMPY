@@ -91,7 +91,13 @@ def home():
 def dashboard():
     if "usuario" not in session:
         return redirect(url_for("login"))
-    calificaciones = gestion.obtener_todas_las_calificaciones()
+    
+    # Filtro automático para Corredores
+    if session.get("rol") == "CORREDOR":
+        calificaciones = gestion.filtro_calificaciones(None, None, None, session["usuario"], None)
+    else:
+        calificaciones = gestion.obtener_todas_las_calificaciones()
+        
     mercados = gestion.obtener_mercados()
     return render_template("dashboard.html", usuario=session["usuario"], calificaciones=calificaciones, mercados=mercados)
 ###############################################################
@@ -254,7 +260,13 @@ def filtro_calificaciones():
         mercado = request.form.get("mercado") or None
         instrumento = request.form.get("instrumento") or None
         anio_original = request.form.get("anio")
-        corredor = request.form.get("corredor") or None
+        
+        # Seguridad: Si es corredor, forzar su nombre en el filtro, ignorando lo que envíe
+        if session.get("rol") == "CORREDOR":
+            corredor = session["usuario"]
+        else:
+            corredor = request.form.get("corredor") or None
+            
         tipo_sociedad = request.form.get("tipo_sociedad") or None
         try:
             anio = int(anio_original) if anio_original else None
@@ -332,6 +344,8 @@ def cargar_factores():
 #-------------------------------------------------------------#
 @app.route("/logs")
 def logs():
+    if "usuario" not in session or session.get("rol") != "ADMIN":
+        return redirect(url_for("dashboard"))
 #### Obtención de registros de logs                           #
 #### Si la función no existe, retorna una lista vacía         #
     registros = gestion.obtener_logs() if hasattr(gestion, "obtener_logs") else []

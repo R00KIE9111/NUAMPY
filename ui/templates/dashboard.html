@@ -58,6 +58,7 @@
 
                         {% if session.get('rol') == 'ADMIN' %}
                         <a href="{{ url_for('administracion') }}">Admin</a>
+                        <a href="{{ url_for('logs') }}">Logs (Auditoría)</a>
                         {% endif %}
 
                         <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
@@ -114,6 +115,7 @@
         </table>
     </div>
 
+    {% if session.get('rol') in ['ADMIN', 'CORREDOR'] %}
     <footer>
         <div class="footer_botones">
             <a href="{{ url_for('crear_calificacion') }}" class="footer-btn">INGRESAR</a>
@@ -121,6 +123,7 @@
             <a href="{{ url_for('cargar_montos') }}" class="footer-btn">CARGA X MONTO</a>
         </div>
     </footer>
+    {% endif %}
 </body>
 
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
